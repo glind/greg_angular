@@ -1,0 +1,65 @@
+<div class="form">
+  <fj-button color="light" *ngIf="backButtonText" (click)="goToListPage()" [margin]="'30px 0px 0px 0px'">← {{backButtonText}}</fj-button>
+  <h3 *ngIf="currentItem && titleProp">
+    {{currentItem[titleProp]}}
+  </h3>
+  <h3 *ngIf="title">
+    {{title}}
+  </h3>
+  <fj-spinner *ngIf="!(dataLoaded | async)"></fj-spinner>
+  <div *ngIf="(dataLoaded | async)" class="form__card">
+    <form class="form__container" *ngIf="detailsForm" [formGroup]="detailsForm" (submit)="submitForm()">
+      <div class="form__field" *ngFor="let formField of formFields">
+        <ng-container [ngSwitch]="formField.type">
+          <ng-container *ngSwitchCase="'text'">
+            <fj-text-input *ngIf="formField.controlName"
+                           [placeholder]="formField.label"
+                           [label]="formField.label"
+                           [error]="errors[formField.controlName]"
+                           [formGroup]="detailsForm"
+                           [customStyles]="{'width': '100%'}"
+                           [controlName]="formField.controlName"
+            ></fj-text-input>
+          </ng-container>
+          <ng-container *ngSwitchCase="'checkBox'">
+            <fj-checkbox-group
+              [label]="formField.label"
+              [options]="formField.options"
+              [formGroup]="detailsForm"
+              [controlName]="formField.controlName"
+              [error]="errors[formField.controlName]"
+            >
+            </fj-checkbox-group>
+          </ng-container>
+          <ng-container *ngSwitchCase="'radioButton'">
+            <fj-radio-button-group
+              [label]="formField.label"
+              [options]="formField.options"
+              [formGroup]="detailsForm"
+              [controlName]="formField.controlName"
+              [error]="errors[formField.controlName]"
+            >
+            </fj-radio-button-group>
+          </ng-container>
+          <ng-container *ngSwitchCase="'nativeDropdown'">
+            <fj-native-dropdown
+              [label]="formField.label"
+              [options]="formField.options"
+              [customStyles]="{'width': '100%'}"
+              [formGroup]="detailsForm"
+              [controlName]="formField.controlName"
+              [error]="errors[formField.controlName]"
+            >
+            </fj-native-dropdown>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="form__submit">
+        <fj-button (click)="submitForm()" *ngIf="(addButtonText || editButtonText)" [disabled]="!detailsForm.valid" [type]="'submit'">
+          <ng-container *ngIf="!itemId">{{addButtonText}}</ng-container>
+          <ng-container *ngIf="itemId">{{editButtonText}}</ng-container>
+        </fj-button>
+      </div>
+    </form>
+  </div>
+</div>
